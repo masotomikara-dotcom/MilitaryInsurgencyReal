@@ -1,33 +1,34 @@
 {
   "itemGroup.militaryinsurgency.military_group": "Military Insurgency",
-
+  
+  "item.militaryinsurgency.coal_coke": "Coal Coke",
+  "item.militaryinsurgency.coal_coke_dust": "Coal Coke Dust",
+  "item.militaryinsurgency.molten_coal_coke": "Molten Coal Coke",
+  "item.militaryinsurgency.iron_coal_mix": "Iron-Coal Mix",
+  "item.militaryinsurgency.gold_plated_steel": "Gold Plated Steel",
+  "item.militaryinsurgency.hardened_steel_plate": "Hardened Steel Plate",
   "item.militaryinsurgency.titanium_ingot": "Titanium Ingot",
+  "item.militaryinsurgency.kevlar_mesh": "Kevlar Mesh",
+  "item.militaryinsurgency.carbon_fiber_sheet": "Carbon Fiber Sheet",
+  "item.militaryinsurgency.tactical_upgrade_template": "Tactical Upgrade Template",
+
+  "item.militaryinsurgency.hardened_steel_helmet": "Hardened Steel Helmet",
+  "item.militaryinsurgency.hardened_steel_chestplate": "Hardened Steel Chestplate",
+  "item.militaryinsurgency.hardened_steel_leggings": "Hardened Steel Leggings",
+  "item.militaryinsurgency.hardened_steel_boots": "Hardened Steel Boots",
+
   "item.militaryinsurgency.titanium_helmet": "Titanium Helmet",
   "item.militaryinsurgency.titanium_chestplate": "Titanium Chestplate",
   "item.militaryinsurgency.titanium_leggings": "Titanium Leggings",
   "item.militaryinsurgency.titanium_boots": "Titanium Boots",
 
-  "item.militaryinsurgency.carbon_fiber_sheet": "Carbon Fiber Sheet",
-  "item.militaryinsurgency.carbon_fiber_helmet": "Carbon Fiber Helmet",
-  "item.militaryinsurgency.carbon_fiber_chestplate": "Carbon Fiber Chestplate",
-  "item.militaryinsurgency.carbon_fiber_leggings": "Carbon Fiber Leggings",
-  "item.militaryinsurgency.carbon_fiber_boots": "Carbon Fiber Boots",
-
-  "item.militaryinsurgency.coal_coke": "Coal Coke",
-  "item.militaryinsurgency.kevlar_mesh": "Kevlar Mesh"
-    "item.militaryinsurgency.coal_coke_dust": "Coal Coke Dust",
-  "item.militaryinsurgency.molten_coal_coke": "Molten Coal Coke",
-  "item.militaryinsurgency.iron_coal_mix": "Iron-Coal Mix",
-  "item.militaryinsurgency.gold_plated_steel": "Gold Plated Steel",
-  "item.militaryinsurgency.hardened_steel_plate": "Hardened Steel Plate",
-  "item.militaryinsurgency.hardened_steel_helmet": "Hardened Steel Helmet",
-  "item.militaryinsurgency.hardened_steel_chestplate": "Hardened Steel Chestplate",
-  "item.militaryinsurgency.hardened_steel_leggings": "Hardened Steel Leggings",
-  "item.militaryinsurgency.hardened_steel_boots": "Hardened Steel Boots",
   "item.militaryinsurgency.kevlar_helmet": "Kevlar Helmet",
   "item.militaryinsurgency.kevlar_chestplate": "Kevlar Chestplate",
   "item.militaryinsurgency.kevlar_leggings": "Kevlar Leggings",
   "item.militaryinsurgency.kevlar_boots": "Kevlar Boots",
-  "item.militaryinsurgency.tactical_upgrade_template": "Tactical Upgrade Template"
-}
 
+  "item.militaryinsurgency.carbon_fiber_helmet": "Carbon Fiber Helmet",
+  "item.militaryinsurgency.carbon_fiber_chestplate": "Carbon Fiber Chestplate",
+  "item.militaryinsurgency.carbon_fiber_leggings": "Carbon Fiber Leggings",
+  "item.militaryinsurgency.carbon_fiber_boots": "Carbon Fiber Boots"
+}

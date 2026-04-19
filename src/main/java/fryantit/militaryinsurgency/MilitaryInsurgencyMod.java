@@ -24,14 +24,33 @@ public class MilitaryInsurgencyMod implements ModInitializer {
                     .displayName(Text.translatable("itemGroup.militaryinsurgency.military_group"))
                     .entries((context, entries) -> {
                         entries.add(MilitaryItems.COAL_COKE);
+                        entries.add(MilitaryItems.COAL_COKE_DUST);
+                        entries.add(MilitaryItems.IRON_COAL_MIX);
+                        entries.add(MilitaryItems.GOLD_PLATED_STEEL);
+                        entries.add(MilitaryItems.MOLTEN_COAL_COKE);
+                        entries.add(MilitaryItems.HARDENED_STEEL_PLATE);
                         entries.add(MilitaryItems.TITANIUM_INGOT);
+                        entries.add(MilitaryItems.KEVLAR_MESH);
                         entries.add(MilitaryItems.CARBON_FIBER_SHEET);
+                        entries.add(MilitaryItems.TACTICAL_UPGRADE_TEMPLATE);
+                        entries.add(MilitaryArmorItems.HARDENED.STEEL_HELMET);
+                        entries.add(MilitaryArmorItems.HARDENED.STEEL_CHESTPLATE);
+                        entries.add(MilitaryArmorItems.HARDENED.STEEL_LEGGINGS);
+                        entries.add(MilitaryArmorItems.HARDENED.STEEL_BOOTS);
                         entries.add(MilitaryArmorItems.TITANIUM_HELMET);
                         entries.add(MilitaryArmorItems.TITANIUM_CHESTPLATE);
                         entries.add(MilitaryArmorItems.TITANIUM_LEGGINGS);
                         entries.add(MilitaryArmorItems.TITANIUM_BOOTS);
-                        // Add more items here if needed
+                        entries.add(MilitaryArmorItems.KEVLAR_HELMET);
+                        entries.add(MilitaryArmorItems.KEVLAR_CHESTPLATE);
+                        entries.add(MilitaryArmorItems.KEVLAR_LEGGINGS);
+                        entries.add(MilitaryArmorItems.KEVLAR_BOOTS);
+                        entries.add(MilitaryArmorItems.CARBON_FIBER_HELMET);
+                        entries.add(MilitaryArmorItems.CARBON_FIBER_CHESTPLATE);
+                        entries.add(MilitaryArmorItems.CARBON_FIBER_LEGGINGS);
+                        entries.add(MilitaryArmorItems.CARBON_FIBER_BOOTS);
                     })
+
                     .build());
 
     @Override
