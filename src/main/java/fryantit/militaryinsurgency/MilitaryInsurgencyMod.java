@@ -33,10 +33,10 @@ public class MilitaryInsurgencyMod implements ModInitializer {
                         entries.add(MilitaryItems.KEVLAR_MESH);
                         entries.add(MilitaryItems.CARBON_FIBER_SHEET);
                         entries.add(MilitaryItems.TACTICAL_UPGRADE_TEMPLATE);
-                        entries.add(MilitaryArmorItems.HARDENED.STEEL_HELMET);
-                        entries.add(MilitaryArmorItems.HARDENED.STEEL_CHESTPLATE);
-                        entries.add(MilitaryArmorItems.HARDENED.STEEL_LEGGINGS);
-                        entries.add(MilitaryArmorItems.HARDENED.STEEL_BOOTS);
+                        entries.add(MilitaryArmorItems.HARDENED_STEEL_HELMET);
+                        entries.add(MilitaryArmorItems.HARDENED_STEEL_CHESTPLATE);
+                        entries.add(MilitaryArmorItems.HARDENED_STEEL_LEGGINGS);
+                        entries.add(MilitaryArmorItems.HARDENED_STEEL_BOOTS);
                         entries.add(MilitaryArmorItems.TITANIUM_HELMET);
                         entries.add(MilitaryArmorItems.TITANIUM_CHESTPLATE);
                         entries.add(MilitaryArmorItems.TITANIUM_LEGGINGS);
