@@ -10,10 +10,10 @@ import net.minecraft.sound.SoundEvents;
 import java.util.function.Supplier;
 
 public enum MilitaryArmorMaterials implements ArmorMaterial {
-    HARDENED_STEEL("hardened_steel", 25, new int[]{3, 6, 7, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0.0F, () -> Ingredient.ofItems(MilitaryItems.HARDENED_STEEL_PLATE)),
-    KEVLAR("kevlar", 35, new int[]{3, 7, 9, 3}, 12, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 2.5F, 0.05F, () -> Ingredient.ofItems(MilitaryItems.KEVLAR_MESH)),
-    TITANIUM("titanium", 40, new int[]{4, 7, 9, 4}, 15, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.5F, 0.1F, () -> Ingredient.ofItems(MilitaryItems.TITANIUM_INGOT)),
-    CARBON_FIBER("carbon_fiber", 37, new int[]{4, 8, 10, 4}, 18, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 4.0F, 0.15F, () -> Ingredient.ofItems(MilitaryItems.CARBON_FIBER_SHEET));
+    HARDENED_STEEL("militaryinsurgency:hardened_steel", 25, new int[]{3, 6, 7, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0.0F, () -> Ingredient.ofItems(MilitaryItems.HARDENED_STEEL_PLATE)),
+    KEVLAR("militaryinsurgency:kevlar", 35, new int[]{3, 7, 9, 3}, 12, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 2.5F, 0.05F, () -> Ingredient.ofItems(MilitaryItems.KEVLAR_MESH)),
+    TITANIUM("militaryinsurgency:titanium", 40, new int[]{4, 7, 9, 4}, 15, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.5F, 0.1F, () -> Ingredient.ofItems(MilitaryItems.TITANIUM_INGOT)),
+    CARBON_FIBER("militaryinsurgency:carbon_fiber", 37, new int[]{4, 8, 10, 4}, 18, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 4.0F, 0.15F, () -> Ingredient.ofItems(MilitaryItems.CARBON_FIBER_SHEET));
 
     private static final int[] BASE_DURABILITY = new int[]{13, 15, 16, 11};
     private final String name;

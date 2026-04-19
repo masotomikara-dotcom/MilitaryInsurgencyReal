@@ -6,8 +6,8 @@
     "GGG"
   ],
   "key": {
-    "G": { "item": "minecraft:gold_nugget" },
-    "I": { "item": "minecraft:iron_ingot" }
+    "G": { "item": "minecraft:gold_ingot" },
+    "I": { "item": "minecraft:hardened_steel_plate" }
   },
   "result": {
     "item": "militaryinsurgency:gold_plated_steel",
