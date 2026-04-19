@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 
 public class MilitaryItems {
     public static final Item HARDENED_STEEL_PLATE = registerItem("hardened_steel_plate", new Item(new FabricItemSettings()));
