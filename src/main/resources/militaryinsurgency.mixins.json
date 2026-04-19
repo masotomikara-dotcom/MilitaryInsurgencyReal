@@ -4,7 +4,7 @@
   "package": "fryantit.militaryinsurgency.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ExampleMixin"
+    "MilitaryInsurgencyMixin"
   ],
   "injectors": {
     "defaultRequire": 1
