@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": { "item": "militaryinsurgency:coal_coke" },
+  "result": "militaryinsurgency:molten_coal_coke",
+  "experience": 2.0,
+  "cookingtime": 2400
+}

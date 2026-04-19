@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": { "item": "militaryinsurgency:kevlar_mesh" }
+  },
+  "result": {
+    "item": "militaryinsurgency:kevlar_chestplate",
+    "count": 1
+  }
+}

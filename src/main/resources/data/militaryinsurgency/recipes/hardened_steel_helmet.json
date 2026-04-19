@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "X X"
+  ],
+  "key": {
+    "X": { "item": "militaryinsurgency:hardened_steel_plate" }
+  },
+  "result": {
+    "item": "militaryinsurgency:hardened_steel_helmet",
+    "count": 1
+  }
+}

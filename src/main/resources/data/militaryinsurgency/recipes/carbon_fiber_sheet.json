@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": { "item": "militaryinsurgency:molten_coal_coke" },
+  "result": "militaryinsurgency:carbon_fiber_sheet",
+  "experience": 5.0,
+  "cookingtime": 1200
+}

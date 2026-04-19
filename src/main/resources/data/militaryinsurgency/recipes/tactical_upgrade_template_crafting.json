@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DDD",
+    "DTD",
+    "DDD"
+  ],
+  "key": {
+    "D": { "item": "minecraft:diamond" },
+    "T": { "item": "minecraft:netherite_upgrade_smithing_template" }
+  },
+  "result": {
+    "item": "militaryinsurgency:tactical_upgrade_template",
+    "count": 1
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "ICI",
+    "III"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_nugget" },
+    "C": { "item": "militaryinsurgency:coal_coke_dust" }
+  },
+  "result": { "item": "militaryinsurgency:iron_coal_mix", "count": 1 }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "X T"
+  ],
+  "key": {
+    "X": { "item": "militaryinsurgency:carbon_fiber_sheet" },
+    "T": { "item": "militaryinsurgency:tactical_upgrade_template" }
+  },
+  "result": { "item": "militaryinsurgency:carbon_fiber_boots" }
+}

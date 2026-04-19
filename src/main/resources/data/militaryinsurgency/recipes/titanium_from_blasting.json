@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "militaryinsurgency:gold_plated_steel"
+  },
+  "result": "militaryinsurgency:titanium_ingot",
+  "experience": 0.7,
+  "cookingtime": 200
+}

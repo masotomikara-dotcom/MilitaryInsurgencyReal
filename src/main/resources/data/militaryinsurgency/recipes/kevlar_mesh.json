@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "SGS",
+    "CCC"
+  ],
+  "key": {
+    "C": { "item": "militaryinsurgency:coal_coke_dust" },
+    "S": { "item": "minecraft:string" },
+    "G": { "item": "militaryinsurgency:hardened_steel_plate" }
+  },
+  "result": { "item": "militaryinsurgency:kevlar_mesh", "count": 1 }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": { "item": "militaryinsurgency:titanium_ingot" }
+  },
+  "result": {
+    "item": "militaryinsurgency:titanium_boots",
+    "count": 1
+  }
+}

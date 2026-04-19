@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "militaryinsurgency:iron_coal_mix"
+  },
+  "result": "militaryinsurgency:hardened_steel_plate",
+  "experience": 0.7,
+  "cookingtime": 100
+}
