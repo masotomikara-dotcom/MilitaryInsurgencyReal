@@ -25,6 +25,7 @@ public enum MilitaryArmorMaterials implements ArmorMaterial {
     private final float knockbackResistance;
     private final Supplier<Ingredient> repairIngredientSupplier;
 
+    // Constructor for enum
     MilitaryArmorMaterials(String name, int durabilityMultiplier, int[] protectionAmounts, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> repairIngredientSupplier) {
         this.name = name;
         this.durabilityMultiplier = durabilityMultiplier;
@@ -36,43 +37,12 @@ public enum MilitaryArmorMaterials implements ArmorMaterial {
         this.repairIngredientSupplier = repairIngredientSupplier;
     }
 
-    @Override
-    public int getDurability(ArmorItem.Type type) {
-        return BASE_DURABILITY[type.getEquipmentSlot().getEntitySlotId()] * this.durabilityMultiplier;
-    }
-
-    @Override
-    public int getProtection(ArmorItem.Type type) {
-        return this.protectionAmounts[type.getEquipmentSlot().getEntitySlotId()];
-    }
-
-    @Override
-    public int getEnchantability() {
-        return this.enchantability;
-    }
-
-    @Override
-    public SoundEvent getEquipSound() {
-        return this.equipSound;
-    }
-
-    @Override
-    public Ingredient getRepairIngredient() {
-        return this.repairIngredientSupplier.get();
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public float getToughness() {
-        return this.toughness;
-    }
-
-    @Override
-    public float getKnockbackResistance() {
-        return this.knockbackResistance;
-    }
+    @Override public int getDurability(ArmorItem.Type type) { return BASE_DURABILITY[type.getEquipmentSlot().getEntitySlotId()] * this.durabilityMultiplier; }
+    @Override public int getProtection(ArmorItem.Type type) { return this.protectionAmounts[type.getEquipmentSlot().getEntitySlotId()]; }
+    @Override public int getEnchantability() { return this.enchantability; }
+    @Override public SoundEvent getEquipSound() { return this.equipSound; }
+    @Override public Ingredient getRepairIngredient() { return this.repairIngredientSupplier.get(); }
+    @Override public String getName() { return this.name; }
+    @Override public float getToughness() { return this.toughness; }
+    @Override public float getKnockbackResistance() { return this.knockbackResistance; }
 }
