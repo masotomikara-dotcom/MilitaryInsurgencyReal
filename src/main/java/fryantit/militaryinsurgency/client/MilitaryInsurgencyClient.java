@@ -16,7 +16,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class MilitaryInsurgencyClient implements ClientModInitializer {
@@ -35,26 +34,33 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                 "category.militaryinsurgency.general" 
         ));
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        // Actual Brightness Boost Logic
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.player == null) return;
+            ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
+            boolean isActive = helmet.getItem() instanceof NVGArmorItem && helmet.getOrCreateNbt().getBoolean("nvg_active");
+
+            if (isActive) {
+                // Force extreme brightness (3 shades logic)
+                client.options.getGamma().setValue(Math.min(15.0, (double)CONFIG.maxBrightness * 2.5));
+            } else {
+                client.options.getGamma().setValue(1.0);
+            }
+
             while (toggleNvgKey.wasPressed()) {
-                ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
                 if (helmet.getItem() instanceof NVGArmorItem) {
                     NbtCompound nbt = helmet.getOrCreateNbt();
                     boolean newState = !nbt.getBoolean("nvg_active");
                     nbt.putBoolean("nvg_active", newState);
-                    
-                    // English: Sound effects without vanilla night vision status
                     client.player.playSound(newState ? SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE : SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, 1.0f, 2.0f);
-                    client.player.sendMessage(Text.literal("NVG: " + (newState ? "ON" : "OFF")), true);
                 }
             }
         });
 
-        // English: HUD Rendering with 3-tone color logic (Black, White, Cyan)
+        // Professional 3-Tone Vignette (No more "TikTok PC" window)
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
-            if (client.player == null) return;
+            if (client.player == null || client.options.hudHidden) return;
             
             ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
             if (helmet.getItem() instanceof NVGArmorItem && helmet.getOrCreateNbt().getBoolean("nvg_active")) {
@@ -64,21 +70,24 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
 
-                // English: 1. Render 4-way Vignette first to define the lens shape (Black Tone)
-                // This prevents the "TikTok PC" vertical line issue
-                drawContext.fillGradient(0, 0, w, h / 2, 0xFF000000, 0x00000000); // Top
-                drawContext.fillGradient(0, h / 2, w, h, 0x00000000, 0xFF000000); // Bottom
-                drawContext.fillGradient(0, 0, w / 2, h, 0xFF000000, 0x00000000); // Left
-                drawContext.fillGradient(w / 2, 0, w, h, 0x00000000, 0xFF000000); // Right
+                // 1. Diverse Tint (Cyan-White shade)
+                int alpha = (int)(CONFIG.maxBrightness * 15); 
+                drawContext.fill(0, 0, w, h, (alpha << 24) | 0x33FFFF); 
 
-                // English: 2. Render Main Color Tint (Cyan Tone)
-                // Brightness is controlled by the alpha of this single layer
-                int alpha = (int)(CONFIG.maxBrightness * 25); 
-                drawContext.fill(0, 0, w, h, (alpha << 24) | 0x00FFFF);
+                // 2. Soft Circular Vignette using loop (Diverse shades of Black/Cyan)
+                for (int i = 0; i < 50; i += 2) {
+                    int gradAlpha = Math.min(220, 255 - (i * 4));
+                    int blackColor = (gradAlpha << 24);
+                    
+                    // Smoothly blend edges towards center
+                    drawContext.fillGradient(0, i, w, i + 2, blackColor, 0x0000FFFF); // Top
+                    drawContext.fillGradient(0, h - i - 2, w, h - i, 0x0000FFFF, blackColor); // Bottom
+                    drawContext.fillGradient(i, 0, i + 2, h, blackColor, 0x0000FFFF); // Left
+                    drawContext.fillGradient(w - i - 2, 0, w, h, 0x0000FFFF, blackColor); // Right
+                }
 
-                // English: 3. Render Center Glow (White Tone)
-                // Subtle highlight in the middle to create depth
-                drawContext.fillGradient(w/2 - 60, h/2 - 60, w/2 + 60, h/2 + 60, 0x33FFFFFF, 0x00FFFFFF);
+                // 3. Center Glow (White shade)
+                drawContext.fillGradient(w/2 - 40, h/2 - 40, w/2 + 40, h/2 + 40, 0x22FFFFFF, 0x00FFFFFF);
 
                 RenderSystem.disableBlend();
             }
