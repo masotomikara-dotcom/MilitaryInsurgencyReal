@@ -6,6 +6,9 @@
   "mixins": [
     "MilitaryInsurgencyMixin"
   ],
+  "client": [
+    "GameRendererAccessor"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

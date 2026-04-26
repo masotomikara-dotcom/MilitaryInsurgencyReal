@@ -19,11 +19,11 @@ import net.minecraft.util.math.MathHelper;
 import fryantit.militaryinsurgency.armor.NVGArmorItem;
 import fryantit.militaryinsurgency.armor.MilitaryArmorItems;
 import fryantit.militaryinsurgency.client.renderer.NVGItemRenderer;
+import fryantit.militaryinsurgency.mixin.GameRendererAccessor; // Import Accessor mới
 import org.lwjgl.glfw.GLFW;
 
 public class MilitaryInsurgencyClient implements ClientModInitializer {
     private static KeyBinding toggleNvgKey;
-    
     private static float currentAmplification = 1.0f;
     private static float targetAmplification = 1.0f;
     private static final float ADAPTATION_SPEED = 0.05f;
@@ -50,9 +50,7 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                     nbt.putBoolean("nvg_active", newState);
                     
                     if (newState) {
-                        client.gameRenderer.onResized(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight());
-                        client.gameRenderer.loadPostProcessor(new Identifier("minecraft", "shaders/post/nvg_white.json"));
-                        
+                        ((GameRendererAccessor)client.gameRenderer).callLoadPostProcessor(new Identifier("minecraft", "shaders/post/nvg_white.json"));
                         client.player.setPitch(client.player.getPitch() + 2.0f);
                         client.player.playSound(SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, 1.0f, 2.0f);
                     } else {
@@ -61,34 +59,6 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                         client.options.getGamma().setValue(1.0);
                     }
                     client.player.sendMessage(Text.literal("NVG " + (newState ? "Activated" : "Deactivated")), true);
-                }
-            }
-
-            ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
-            if (helmet.getItem() instanceof NVGArmorItem && helmet.getOrCreateNbt().getBoolean("nvg_active")) {
-                int lightLevel = client.world.getLightLevel(client.player.getBlockPos());
-                float ambientBrightness = lightLevel / 15.0f;
-
-                targetAmplification = (ambientBrightness < 0.1f) ? 8.0f : (1.0f / (ambientBrightness * 2.0f));
-                targetAmplification = MathHelper.clamp(targetAmplification, 1.0f, 8.0f);
-
-                currentAmplification = MathHelper.lerp(ADAPTATION_SPEED, currentAmplification, targetAmplification);
-                client.options.getGamma().setValue((double) currentAmplification);
-            }
-        });
-
-        HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client.player != null) {
-                ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
-                if (helmet.getItem() instanceof NVGArmorItem && helmet.getOrCreateNbt().getBoolean("nvg_active")) {
-                    Identifier vignette = new Identifier("militaryinsurgency", "textures/misc/nvg_vignette.png");
-                    int w = client.getWindow().getScaledWidth();
-                    int h = client.getWindow().getScaledHeight();
-
-                    RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
-                    drawContext.drawTexture(vignette, 0, 0, 0, 0, w, h, w, h);
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 }
             }
         });
