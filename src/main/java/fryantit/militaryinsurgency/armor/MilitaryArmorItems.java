@@ -29,8 +29,13 @@ public class MilitaryArmorItems {
     public static final Item CARBON_FIBER_LEGGINGS = registerArmor("carbon_fiber_leggings", MilitaryArmorMaterials.CARBON_FIBER, ArmorItem.Type.LEGGINGS);
     public static final Item CARBON_FIBER_BOOTS = registerArmor("carbon_fiber_boots", MilitaryArmorMaterials.CARBON_FIBER, ArmorItem.Type.BOOTS);
 
+    public static final Item CIVIL_NVG = registerNVG("civil_nvg", MilitaryArmorMaterials.MILITARY, ArmorItem.Type.HELMET);
     private static Item registerArmor(String name, MilitaryArmorMaterials material, ArmorItem.Type type) {
         return Registry.register(Registries.ITEM, new Identifier(MilitaryInsurgencyMod.MOD_ID, name), new ArmorItem(material, type, new FabricItemSettings()));
+    }
+    
+    private static Item registerNVG(String name, MilitaryArmorMaterials material, ArmorItem.Type type) {
+        return Registry.register(Registries.ITEM, new Identifier(MilitaryInsurgencyMod.MOD_ID, name), new NVGArmorItem(material, type, new FabricItemSettings()));
     }
 
     public static void registerModArmor() {

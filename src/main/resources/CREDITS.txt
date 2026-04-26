@@ -1,0 +1,20 @@
+============================================================
+           MILITARY INSURGENCY MOD - CREDITS
+============================================================
+
+DEVELOPMENT:
+- Lead Developer: Fryantit (Author's name)
+- Framework: Fabric Mod Loader
+
+ART & TEXTURE ASSETS:
+- Armor Textures: Based on assets from the AOKOS Project.
+- Design Inspiration: Marbled's Arsenal (Legacy) by Marbled.
+
+LEGAL & DISCLAIMER:
+- The developer does not claim ownership of the original texture designs used in this mod. 
+- All rights remain with the original creators (AORKOS/Marblednull).
+- If you are a copyright holder and wish for these assets to be removed, please contact me via GitHub.
+
+NOTICE:
+This file is included in the mod distribution for transparency and to respect the original artists' work.
+============================================================

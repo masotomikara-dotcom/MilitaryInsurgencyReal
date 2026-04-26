@@ -17,6 +17,12 @@
 	"entrypoints": {
 		"main": [
 			"fryantit.militaryinsurgency.MilitaryInsurgencyMod"
+		],
+		"client": [
+			"fryantit.militaryinsurgency.client.MilitaryInsurgencyClient"
+		],
+		"modmenu": [
+			"fryantit.militaryinsurgency.client.ModMenuIntegration"
 		]
 	},
 	"mixins": [

@@ -1,6 +1,6 @@
 {
   "itemGroup.militaryinsurgency.military_group": "Military Insurgency",
-  
+ 
   "item.militaryinsurgency.coal_coke": "Coal Coke",
   "item.militaryinsurgency.coal_coke_dust": "Coal Coke Dust",
   "item.militaryinsurgency.molten_coal_coke": "Molten Coal Coke",
@@ -30,5 +30,10 @@
   "item.militaryinsurgency.carbon_fiber_helmet": "Carbon Fiber Helmet",
   "item.militaryinsurgency.carbon_fiber_chestplate": "Carbon Fiber Chestplate",
   "item.militaryinsurgency.carbon_fiber_leggings": "Carbon Fiber Leggings",
-  "item.militaryinsurgency.carbon_fiber_boots": "Carbon Fiber Boots"
+  "item.militaryinsurgency.carbon_fiber_boots": "Carbon Fiber Boots",
+
+  "item.militaryinsurgency.civil_nvg": "Civilian NVG Goggles",
+
+  "key.militaryinsurgency.toggle_nvg": "Toggle NVG Goggles",
+  "category.militaryinsurgency.general": "Military Insurgency"
 }
