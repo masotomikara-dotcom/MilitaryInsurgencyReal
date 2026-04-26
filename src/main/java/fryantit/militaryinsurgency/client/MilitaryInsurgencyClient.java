@@ -57,12 +57,12 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                     
                     if (newState) {
                         // Load Cyan Shader
-                        client.gameRenderer.loadPostChain(new Identifier("minecraft", "shaders/post/nvg_white.json"));
+                        client.gameRenderer.loadPostProcessor(new Identifier("minecraft", "shaders/post/nvg_white.json"));
                         client.player.setPitch(client.player.getPitch() + 2.0f);
                         client.player.playSound(SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, 1.0f, 2.0f);
                     } else {
                         // Clear Shader and reset Gamma
-                        client.gameRenderer.clearPostChain();
+                        client.gameRenderer.disablePostProcessor();
                         client.player.playSound(SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, 1.0f, 2.0f);
                         client.options.getGamma().setValue(1.0);
                     }

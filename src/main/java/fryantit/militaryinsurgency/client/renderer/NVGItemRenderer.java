@@ -18,7 +18,7 @@ public class NVGItemRenderer implements BuiltinItemRendererRegistry.DynamicItemR
 
     public NVGItemRenderer() {
         // Initialize the Java model using the Head layer as a base
-        this.model = new NVGModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(EntityModelLayers.HEAD));
+        this.model = new NVGModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(net.minecraft.client.render.entity.model.EntityModelLayers.PLAYER_HEAD));
     }
 
     @Override
