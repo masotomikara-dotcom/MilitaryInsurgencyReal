@@ -3,7 +3,6 @@ package fryantit.militaryinsurgency.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import fryantit.militaryinsurgency.armor.NVGArmorItem;
 import fryantit.militaryinsurgency.config.ModConfig;
-import fryantit.militaryinsurgency.mixin.GameRendererAccessor;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -18,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 
@@ -29,11 +27,9 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // 1. Initialize Cloth Config
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
 
-        // 2. Register Keybinding
         toggleNvgKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.militaryinsurgency.toggle_nvg", 
                 InputUtil.Type.KEYSYM,
@@ -41,7 +37,6 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                 "category.militaryinsurgency.general" 
         ));
 
-        // 3. NVG Toggle and Fullbright logic
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null) return;
 
@@ -53,10 +48,8 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                     nbt.putBoolean("nvg_active", newState);
                     
                     if (newState) {
-                        ((GameRendererAccessor)client.gameRenderer).callLoadPostProcessor(new Identifier("minecraft", "shaders/post/creeper.json"));
                         client.player.playSound(SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, 1.0f, 2.0f);
                     } else {
-                        client.gameRenderer.disablePostProcessor();
                         client.player.playSound(SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, 1.0f, 2.0f);
                         currentAmplification = 1.0f;
                         client.options.getGamma().setValue(1.0);
@@ -75,7 +68,7 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
             }
         });
 
-        // 4. HUD Render Callback with Vignette Lens Effect
+        // Fixed anti-aliasing issue by rendering overlay BEFORE items.
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
             if (!CONFIG.enableCyanOverlay) return;
 
@@ -86,24 +79,29 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                     int width = client.getWindow().getScaledWidth();
                     int height = client.getWindow().getScaledHeight();
 
+                    // Pre-render state
                     RenderSystem.disableDepthTest();
                     RenderSystem.depthMask(false);
                     RenderSystem.enableBlend();
                     RenderSystem.defaultBlendFunc();
 
-                    // Draw Base Cyan Tint
-                    drawContext.fill(0, 0, width, height, 0x6600FFFF); 
+                    // Draw Thinner Base Cyan Tint (0x2200FFFF) to avoid artifacts
+                    drawContext.fill(0, 0, width, height, 0x2200FFFF); 
 
-                    // Draw Vignette Lens (Dark Corners) using Gradients
-                    // Top shadow
-                    drawContext.fillGradient(0, 0, width, height / 3, 0xAA000000, 0x00000000);
-                    // Bottom shadow
-                    drawContext.fillGradient(0, height - (height / 3), width, height, 0x00000000, 0xAA000000);
-                    // Left shadow
-                    drawContext.fillGradient(0, 0, width / 3, height, 0xAA000000, 0x00000000);
-                    // Right shadow
-                    drawContext.fillGradient(width - (width / 3), 0, width, height, 0x00000000, 0xAA000000);
+                    // Correct Vignette Lens using 4 gradients
+                    int vW = (int)(width / 2.5);
+                    int vH = (int)(height / 2.5);
 
+                    // Top
+                    drawContext.fillGradient(0, 0, width, vH, 0xCC000000, 0x00000000);
+                    // Bottom
+                    drawContext.fillGradient(0, height - vH, width, height, 0x00000000, 0xCC000000);
+                    // Left
+                    drawContext.fillGradient(0, 0, vW, height, 0xCC000000, 0x00000000);
+                    // Right
+                    drawContext.fillGradient(width - vW, 0, width, height, 0x00000000, 0xCC000000);
+
+                    // Post-render state restore
                     RenderSystem.depthMask(true);
                     RenderSystem.enableDepthTest();
                 }
