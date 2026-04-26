@@ -2,12 +2,15 @@ package fryantit.militaryinsurgency.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.OptionsScreen;
+import fryantit.militaryinsurgency.config.ModConfig;
+import me.shedaniel.autoconfig.AutoConfig;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> new OptionsScreen(parent, net.minecraft.client.MinecraftClient.getInstance().options);
+        return parent -> AutoConfig.getConfigScreen(ModConfig.class, parent).get();
     }
 }
