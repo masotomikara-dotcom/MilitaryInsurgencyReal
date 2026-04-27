@@ -9,7 +9,7 @@ import net.minecraft.sound.SoundEvents;
 import java.util.function.Supplier;
 
 public enum MilitaryArmorMaterials implements ArmorMaterial {
-    MILITARY("civil_nvg", 15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> Ingredient.ofItems(Items.IRON_INGOT)),
+    CIVIL_NVG("civil_nvg", 15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> Ingredient.ofItems(Items.IRON_INGOT)),
     HARDENED_STEEL("hardened_steel", 25, new int[]{3, 6, 7, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0.0F, () -> Ingredient.ofItems(Items.IRON_INGOT)),
     KEVLAR("kevlar", 35, new int[]{3, 7, 9, 3}, 12, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 2.5F, 0.05F, () -> Ingredient.ofItems(Items.LEATHER)),
     TITANIUM("titanium", 40, new int[]{4, 7, 9, 4}, 15, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.5F, 0.1F, () -> Ingredient.ofItems(Items.IRON_INGOT)),

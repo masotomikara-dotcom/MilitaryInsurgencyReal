@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "item/generated",
   "textures": {
     "layer0": "militaryinsurgency:item/civil_nvg"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": { "pulling": 1 }, 
+      "model": "militaryinsurgency:item/civil_nvg_3d"
+    }
+  ]
 }
