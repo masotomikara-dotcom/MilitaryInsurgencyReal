@@ -16,11 +16,14 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class MilitaryInsurgencyClient implements ClientModInitializer {
     public static ModConfig CONFIG;
     private static KeyBinding toggleNvgKey;
+    // Resource location for your "Golden" PNG overlay
+    private static final Identifier NVG_OVERLAY = new Identifier("militaryinsurgency", "textures/misc/nvg_overlay.png");
 
     @Override
     public void onInitializeClient() {
@@ -34,17 +37,17 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                 "category.militaryinsurgency.general" 
         ));
 
-        // Actual Brightness Boost Logic
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.player == null) return;
             ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
             boolean isActive = helmet.getItem() instanceof NVGArmorItem && helmet.getOrCreateNbt().getBoolean("nvg_active");
 
+            // Logic: Multiply current gamma by 6, capped at 15.0 to replace Night Vision effect
             if (isActive) {
-                // Force extreme brightness (3 shades logic)
-                client.options.getGamma().setValue(Math.min(15.0, (double)CONFIG.maxBrightness * 2.5));
-            } else {
-                client.options.getGamma().setValue(1.0);
+                double currentGamma = client.options.getGamma().getValue();
+                client.options.getGamma().setValue(Math.min(15.0, currentGamma * 6.0)); 
+            } else if (client.options.getGamma().getValue() > 1.0) {
+                client.options.getGamma().setValue(1.0); // Reset to standard brightness
             }
 
             while (toggleNvgKey.wasPressed()) {
@@ -57,7 +60,6 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
             }
         });
 
-        // Professional 3-Tone Vignette (No more "TikTok PC" window)
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player == null || client.options.hudHidden) return;
@@ -70,24 +72,14 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
 
-                // 1. Diverse Tint (Cyan-White shade)
-                int alpha = (int)(CONFIG.maxBrightness * 15); 
-                drawContext.fill(0, 0, w, h, (alpha << 24) | 0x33FFFF); 
+                // 1. Render Cyan tint (Tone 1) - Replaces old "window" drawing logic
+                drawContext.fill(0, 0, w, h, 0x4400FFFF); 
 
-                // 2. Soft Circular Vignette using loop (Diverse shades of Black/Cyan)
-                for (int i = 0; i < 50; i += 2) {
-                    int gradAlpha = Math.min(220, 255 - (i * 4));
-                    int blackColor = (gradAlpha << 24);
-                    
-                    // Smoothly blend edges towards center
-                    drawContext.fillGradient(0, i, w, i + 2, blackColor, 0x0000FFFF); // Top
-                    drawContext.fillGradient(0, h - i - 2, w, h - i, 0x0000FFFF, blackColor); // Bottom
-                    drawContext.fillGradient(i, 0, i + 2, h, blackColor, 0x0000FFFF); // Left
-                    drawContext.fillGradient(w - i - 2, 0, w, h, 0x0000FFFF, blackColor); // Right
-                }
-
-                // 3. Center Glow (White shade)
-                drawContext.fillGradient(w/2 - 40, h/2 - 40, w/2 + 40, h/2 + 40, 0x22FFFFFF, 0x00FFFFFF);
+                // 2. Render Black PNG Overlay (Tone 2) - Naturally anti-aliased via texture
+                RenderSystem.setShaderTexture(0, NVG_OVERLAY);
+                drawContext.drawTexture(NVG_OVERLAY, 0, 0, 0, 0, w, h, w, h);
+                
+                // Note: White tone (Tone 3) is provided by the game's brightened world (Gamma)
 
                 RenderSystem.disableBlend();
             }
