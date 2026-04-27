@@ -38,7 +38,7 @@ public class MilitaryArmorItems {
     public static final Item CARBON_FIBER_BOOTS = registerArmor("carbon_fiber_boots", MilitaryArmorMaterials.CARBON_FIBER, ArmorItem.Type.BOOTS);
 
     // 2. Register NVG with right-click equip logic
-    public static final Item CIVIL_NVG = new NVGArmorItem(MilitaryArmorMaterials.MILITARY, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1)) {
+    public static final Item CIVIL_NVG = new NVGArmorItem(MilitaryArmorMaterials.CIVIL_NVG, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1)) {
         @Override
         public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
             ItemStack itemStack = user.getStackInHand(hand);
