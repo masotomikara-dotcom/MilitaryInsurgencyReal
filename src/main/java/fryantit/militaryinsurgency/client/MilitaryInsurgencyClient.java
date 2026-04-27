@@ -22,8 +22,7 @@ import org.lwjgl.glfw.GLFW;
 public class MilitaryInsurgencyClient implements ClientModInitializer {
     public static ModConfig CONFIG;
     private static KeyBinding toggleNvgKey;
-    // Resource location for your "Golden" PNG overlay
-    private static final Identifier NVG_OVERLAY = new Identifier("militaryinsurgency", "textures/misc/nvg_overlay.png");
+    private static final Identifier NVG_OVERLAY = new Identifier("minecraft", "textures/misc/nvg_overlay.png");
 
     @Override
     public void onInitializeClient() {
@@ -31,23 +30,22 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
         CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
 
         toggleNvgKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.militaryinsurgency.toggle_nvg", 
+                "key.militaryinsurgency.toggle_nvg",
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_N, 
-                "category.militaryinsurgency.general" 
+                GLFW.GLFW_KEY_N,
+                "category.militaryinsurgency.general"
         ));
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.player == null) return;
             ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
-            boolean isActive = helmet.getItem() instanceof NVGArmorItem && helmet.getOrCreateNbt().getBoolean("nvg_active");
+            boolean isActive = (helmet.getItem() instanceof NVGArmorItem) && helmet.getOrCreateNbt().getBoolean("nvg_active");
 
-            // Logic: Multiply current gamma by 6, capped at 15.0 to replace Night Vision effect
+            /* Boost gamma to the limit to see through the lens */
             if (isActive) {
-                double currentGamma = client.options.getGamma().getValue();
-                client.options.getGamma().setValue(Math.min(15.0, currentGamma * 6.0)); 
+                client.options.getGamma().setValue(15.0);
             } else if (client.options.getGamma().getValue() > 1.0) {
-                client.options.getGamma().setValue(1.0); // Reset to standard brightness
+                client.options.getGamma().setValue(1.0);
             }
 
             while (toggleNvgKey.wasPressed()) {
@@ -63,24 +61,27 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player == null || client.options.hudHidden) return;
-            
+
             ItemStack helmet = client.player.getEquippedStack(EquipmentSlot.HEAD);
             if (helmet.getItem() instanceof NVGArmorItem && helmet.getOrCreateNbt().getBoolean("nvg_active")) {
-                int w = client.getWindow().getScaledWidth();
-                int h = client.getWindow().getScaledHeight();
-                
+                int width = client.getWindow().getScaledWidth();
+                int height = client.getWindow().getScaledHeight();
+
+                /* Set the overlay to a very low Z-layer so the Hotbar draws on top of it */
+                drawContext.getMatrices().push();
+                drawContext.getMatrices().translate(0, 0, -500); // Move back in 3D space
+
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
 
-                // 1. Render Cyan tint (Tone 1) - Replaces old "window" drawing logic
-                drawContext.fill(0, 0, w, h, 0x4400FFFF); 
+                /* Render Tone 1: Cyan Tint */
+                drawContext.fill(0, 0, width, height, 0x3300FFFF);
 
-                // 2. Render Black PNG Overlay (Tone 2) - Naturally anti-aliased via texture
+                /* Render Tone 2: The Vignette Overlay */
                 RenderSystem.setShaderTexture(0, NVG_OVERLAY);
-                drawContext.drawTexture(NVG_OVERLAY, 0, 0, 0, 0, w, h, w, h);
-                
-                // Note: White tone (Tone 3) is provided by the game's brightened world (Gamma)
+                drawContext.drawTexture(NVG_OVERLAY, 0, 0, 0, 0, width, height, width, height);
 
+                drawContext.getMatrices().pop();
                 RenderSystem.disableBlend();
             }
         });

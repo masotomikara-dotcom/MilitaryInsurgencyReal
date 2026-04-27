@@ -1,0 +1,28 @@
+/* Inside your ClientModInitializer */
+HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
+    MinecraftClient client = MinecraftClient.getInstance();
+    if (client.player == null || client.options.hudHidden) return;
+
+    if (isNvgActive(client.player)) {
+        int width = client.getWindow().getScaledWidth();
+        int height = client.getWindow().getScaledHeight();
+
+        drawContext.getMatrices().push();
+        // Z = -500 forces the overlay behind the hotbar and health icons
+        drawContext.getMatrices().translate(0, 0, -500.0f);
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+
+        // Draw the cyan tint
+        drawContext.fill(0, 0, width, height, 0x3300FFFF);
+
+        // Draw the black vignette
+        Identifier nvgOverlay = new Identifier("militaryinsurgency", "textures/misc/nvg_overlay.png");
+        RenderSystem.setShaderTexture(0, nvgOverlay);
+        drawContext.drawTexture(nvgOverlay, 0, 0, 0, 0, width, height, width, height);
+
+        drawContext.getMatrices().pop();
+        RenderSystem.disableBlend();
+    }
+});

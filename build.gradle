@@ -9,6 +9,7 @@ group = "fryantit.militaryinsurgency"
 repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     mavenCentral()
 }
 
@@ -17,11 +18,10 @@ dependencies {
     mappings "net.fabricmc:yarn:1.20.1+build.10:v2"
     modImplementation "net.fabricmc:fabric-loader:0.15.11"
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.92.2+1.20.1"
-
-    // ModMenu & Cloth Config
     modImplementation "com.terraformersmc:modmenu:7.2.2"
     modApi "me.shedaniel.cloth:cloth-config-fabric:11.1.118"
     include "me.shedaniel.cloth:cloth-config-fabric:11.1.118"
+    modImplementation "com.berotaku:geckolib-fabric-1.21:5.0" 
 }
 
 processResources {
