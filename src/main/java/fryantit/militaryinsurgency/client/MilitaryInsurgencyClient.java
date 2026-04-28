@@ -30,7 +30,7 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
     public void onInitializeClient() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        GeoArmorRenderer.registerArmorRenderer(new CivilNVGRenderer(), fryantit.militaryinsurgency.item.ModItems.CIVIL_NVG);
+        GeoArmorRenderer.registerArmorRenderer(new CivilNVGRenderer(), fryantit.militaryinsurgency.item.ModItems.NVG_ITEM);
 
         toggleNvgKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.militaryinsurgency.toggle_nvg",

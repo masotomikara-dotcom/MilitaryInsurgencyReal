@@ -20,7 +20,7 @@ public class NVGArmorItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
-    public CivilNVGItem(ArmorMaterial material, Type type, Settings settings) {
+    public NVGArmorItem(ArmorMaterial material, Type type, Settings settings) {
         super(material, type, settings);
     }
 
