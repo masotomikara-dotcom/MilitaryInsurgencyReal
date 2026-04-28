@@ -21,7 +21,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class NVGArmorItem extends ArmorItem implements GeoItem implements GeoItem {
+public class NVGArmorItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
