@@ -2,26 +2,44 @@
 
 # 1. Define paths
 REAL_PATH="src/main/java/fryantit/militaryinsurgency"
-ARMOR_FILE="$REAL_PATH/armor/NVGArmorItem.java"
+ITEM_PATH="$REAL_PATH/item"
 CLIENT_FILE="$REAL_PATH/client/MilitaryInsurgencyClient.java"
+ARMOR_PACKAGE="fryantit.militaryinsurgency.armor"
 
-# 2. Fix Constructor name in NVGArmorItem.java
-# Change 'public CivilNVGItem' to 'public NVGArmorItem'
-if [ -f "$ARMOR_FILE" ]; then
-    sed -i 's/public CivilNVGItem/public NVGArmorItem/g' "$ARMOR_FILE"
-    echo "✅ Fixed constructor name in NVGArmorItem.java"
-fi
+# 2. Create the item directory if it doesn't exist
+mkdir -p "$ITEM_PATH"
 
-# 3. Ensure Client registration uses the correct Item reference
-# We need to make sure it's using the right field from your ModItems or main class
-# I will use 'NVG_ITEM' as a placeholder; please verify if it's 'CIVIL_NVG' or something else
+# 3. Create or Overwrite ModItems.java to ensure NVG_ITEM exists
+cat <<EOF > "$ITEM_PATH/ModItems.java"
+package fryantit.militaryinsurgency.item;
+
+import $ARMOR_PACKAGE.NVGArmorItem;
+import net.minecraft.item.ArmorMaterials;
+import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
+
+public class ModItems {
+    // Registry for the NVG Item
+    public static final Item NVG_ITEM = new NVGArmorItem(ArmorMaterials.NETHERITE, NVGArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+
+    public static void registerModItems() {
+        Registry.register(Registries.ITEM, new Identifier("militaryinsurgency", "civil_nvg"), NVG_ITEM);
+    }
+}
+EOF
+
+# 4. Final fix for MilitaryInsurgencyClient.java
+# Ensure it points exactly to ModItems.NVG_ITEM
 sed -i 's/ModItems.CIVIL_NVG/ModItems.NVG_ITEM/g' "$CLIENT_FILE"
 
-# 4. Final check on imports in NVGArmorItem
-# Ensure it imports the renderer from the correct package
-sed -i 's/import .*CivilNVGRenderer;/import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;/g' "$ARMOR_FILE"
+# 5. Fix NVGArmorItem constructor (safety check)
+if [ -f "$REAL_PATH/armor/NVGArmorItem.java" ]; then
+    sed -i 's/public CivilNVGItem/public NVGArmorItem/g' "$REAL_PATH/armor/NVGArmorItem.java"
+fi
 
 echo "------------------------------------------------"
-echo "Fix applied. The class and constructor are now both named 'NVGArmorItem'."
-echo "Please run your build command now."
+echo "Item Registry Synced: ModItems.NVG_ITEM created."
+echo "Path: $ITEM_PATH/ModItems.java"
 
