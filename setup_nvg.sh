@@ -1,33 +1,72 @@
 #!/bin/bash
 
-# 1. Define paths
-# Identifying the source file for the NVG Armor
+# 1. Define the path
+# Identifying the source file that has duplicate methods
 REAL_PATH="src/main/java/fryantit/militaryinsurgency"
 ARMOR_FILE="$REAL_PATH/armor/NVGArmorItem.java"
 
-# 2. Fix the duplicate "implements GeoItem" error
-# This command replaces the double implementation with a single correct one
-if [ -f "$ARMOR_FILE" ]; then
-    sed -i 's/implements GeoItem implements GeoItem/implements GeoItem/g' "$ARMOR_FILE"
-    echo "✅ Fixed duplicate GeoItem interface in NVGArmorItem.java"
-fi
+# 2. Complete File Rewrite
+# Instead of using 'sed' which caused duplicates, we rewrite the file with clean code
+cat <<EOF > "$ARMOR_FILE"
+package fryantit.militaryinsurgency.armor;
 
-# 3. Clean up the constructor just in case it was duplicated during previous runs
-# Ensuring only one constructor exists and matches the class name
-sed -i 's/public CivilNVGItem/public NVGArmorItem/g' "$ARMOR_FILE"
+import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.ItemStack;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.RenderProvider;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-# 4. Final check for missing brackets or broken lines
-# Using a simple check to ensure the file structure is valid
-if grep -q "implements GeoItem {" "$ARMOR_FILE"; then
-    echo "✅ Syntax check: Class header looks correct."
-else
-    # If the curly brace is missing, add it
-    sed -i 's/implements GeoItem/implements GeoItem {/g' "$ARMOR_FILE"
-    # Remove any potential double braces created by the fix
-    sed -i 's/{ {/{/g' "$ARMOR_FILE"
-fi
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class NVGArmorItem extends ArmorItem implements GeoItem {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    public NVGArmorItem(ArmorMaterial material, Type type, Settings settings) {
+        super(material, type, settings);
+    }
+
+    @Override
+    public void createRenderer(Consumer<Object> consumer) {
+        consumer.accept(new RenderProvider() {
+            private CivilNVGRenderer renderer;
+
+            @Override
+            public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
+                if (this.renderer == null) {
+                    this.renderer = new CivilNVGRenderer();
+                }
+                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+                return this.renderer;
+            }
+        });
+    }
+
+    @Override
+    public Supplier<Object> getRenderProvider() {
+        return GeoItem.makeRenderer(this);
+    }
+
+    @Override
+    public void registerControllers(software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar controllers) {
+        // No animations needed for static NVG goggles
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+}
+EOF
 
 echo "------------------------------------------------"
-echo "✅ Syntax cleanup complete."
+echo "✅ File NVGArmorItem.java has been fully rewritten to avoid duplicates."
+echo "✅ All method conflicts resolved."
 echo "🚀 Run: ./gradlew clean build"
 
