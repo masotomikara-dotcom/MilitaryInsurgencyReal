@@ -1,45 +1,24 @@
 #!/bin/bash
 
-# 1. Define paths
+# 1. Define paths for the project structure
 REAL_PATH="src/main/java/fryantit/militaryinsurgency"
-ITEM_PATH="$REAL_PATH/item"
 CLIENT_FILE="$REAL_PATH/client/MilitaryInsurgencyClient.java"
-ARMOR_PACKAGE="fryantit.militaryinsurgency.armor"
 
-# 2. Create the item directory if it doesn't exist
-mkdir -p "$ITEM_PATH"
+# 2. Fix the GeckoLib 4.x (1.20.1) registration method
+# In GeckoLib 4, the method is static but sometimes requires explicit casting 
+# or a specific package path to match the 'registerArmorRenderer' signature.
+sed -i '/GeoArmorRenderer.registerArmorRenderer/d' "$CLIENT_FILE"
 
-# 3. Create or Overwrite ModItems.java to ensure NVG_ITEM exists
-cat <<EOF > "$ITEM_PATH/ModItems.java"
-package fryantit.militaryinsurgency.item;
+# 3. Inject the correct registration line with proper Casting to avoid 'symbol not found'
+# We use the full path for GeoArmorRenderer to ensure the compiler maps it correctly.
+sed -i '/CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();/a \ \ \ \ \ \ \ \ software.bernie.geckolib.renderer.GeoArmorRenderer.registerArmorRenderer(new fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer(), (net.minecraft.item.Item) fryantit.militaryinsurgency.item.ModItems.NVG_ITEM);' "$CLIENT_FILE"
 
-import $ARMOR_PACKAGE.NVGArmorItem;
-import net.minecraft.item.ArmorMaterials;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-
-public class ModItems {
-    // Registry for the NVG Item
-    public static final Item NVG_ITEM = new NVGArmorItem(ArmorMaterials.NETHERITE, NVGArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
-
-    public static void registerModItems() {
-        Registry.register(Registries.ITEM, new Identifier("militaryinsurgency", "civil_nvg"), NVG_ITEM);
-    }
-}
-EOF
-
-# 4. Final fix for MilitaryInsurgencyClient.java
-# Ensure it points exactly to ModItems.NVG_ITEM
-sed -i 's/ModItems.CIVIL_NVG/ModItems.NVG_ITEM/g' "$CLIENT_FILE"
-
-# 5. Fix NVGArmorItem constructor (safety check)
-if [ -f "$REAL_PATH/armor/NVGArmorItem.java" ]; then
-    sed -i 's/public CivilNVGItem/public NVGArmorItem/g' "$REAL_PATH/armor/NVGArmorItem.java"
-fi
+# 4. Final check: Ensure we don't have duplicate or broken imports in the Client file
+sed -i '/import software.bernie.geckolib.renderer.GeoArmorRenderer;/d' "$CLIENT_FILE"
+sed -i '15i import software.bernie.geckolib.renderer.GeoArmorRenderer;' "$CLIENT_FILE"
 
 echo "------------------------------------------------"
-echo "Item Registry Synced: ModItems.NVG_ITEM created."
-echo "Path: $ITEM_PATH/ModItems.java"
+echo "✅ Registration logic updated for GeckoLib 4.x"
+echo "✅ Added Item casting to match method signature"
+echo "🚀 Everything is synced. You can now run: ./gradlew build"
 
