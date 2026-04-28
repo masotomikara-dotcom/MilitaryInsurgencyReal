@@ -1,36 +1,55 @@
 package fryantit.militaryinsurgency.armor;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.RenderProvider;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class NVGArmorItem extends ArmorItem {
-    public NVGArmorItem(ArmorMaterial material, Type type, Settings settings) {
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class NVGArmorItem extends ArmorItem implements GeoItem {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+
+    public CivilNVGItem(ArmorMaterial material, Type type, Settings settings) {
         super(material, type, settings);
     }
 
-    // Right-click to toggle NVG state in NBT
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-        if (!world.isClient) {
-            NbtCompound nbt = stack.getOrCreateNbt();
-            boolean isActive = nbt.getBoolean("nvg_active");
-            nbt.putBoolean("nvg_active", !isActive);
-        }
-        return TypedActionResult.success(stack);
+    public void createRenderer(Consumer<Object> consumer) {
+        consumer.accept(new RenderProvider() {
+            private CivilNVGRenderer renderer;
+
+            @Override
+            public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
+                if (this.renderer == null)
+                    this.renderer = new CivilNVGRenderer();
+
+                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+                return this.renderer;
+            }
+        });
     }
 
-    // No Night Vision potion effect here. 
-    // Brightness is managed by Gamma in the Client class.
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        // Keeps the method clean to avoid vanilla interference
+    public Supplier<Object> getRenderProvider() {
+        return this.renderProvider;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

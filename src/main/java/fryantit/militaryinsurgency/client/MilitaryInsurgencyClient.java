@@ -11,8 +11,9 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import net.minecraft.client.util.InputUtil;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
+import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -29,7 +30,7 @@ public class MilitaryInsurgencyClient implements ClientModInitializer {
     public void onInitializeClient() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        software.bernie.geckolib.renderer.GeoArmorRenderer.registerArmorRenderer(new fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer(), fryantit.militaryinsurgency.item.ModItems.CIVIL_NVG);
+        GeoArmorRenderer.registerArmorRenderer(new CivilNVGRenderer(), fryantit.militaryinsurgency.item.ModItems.CIVIL_NVG);
 
         toggleNvgKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.militaryinsurgency.toggle_nvg",

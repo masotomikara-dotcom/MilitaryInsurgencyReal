@@ -1,121 +1,63 @@
 #!/bin/bash
 
-# Define base paths
-PACKAGE_PATH="src/main/java/com/example/mod"
-RES_PATH="src/main/resources/assets"
-MOD_ID="militaryinsurgency"
+# 1. Define paths based on your real project
+REAL_PATH="src/main/java/fryantit/militaryinsurgency"
+CLIENT_FILE="$REAL_PATH/client/MilitaryInsurgencyClient.java"
 
-# 1. Create Directories
-mkdir -p "$PACKAGE_PATH/item"
-mkdir -p "$PACKAGE_PATH/client/model"
-mkdir -p "$PACKAGE_PATH/client/renderer"
-mkdir -p "$RES_PATH/$MOD_ID/geo"
-mkdir -p "$RES_PATH/minecraft/textures/models/armor"
+# 2. Create required directories
+mkdir -p "$REAL_PATH/client/renderer"
+mkdir -p "$REAL_PATH/client/model"
+mkdir -p "$REAL_PATH/armor"
+mkdir -p "$REAL_PATH/item"
 
-# 2. Create CivilNVGItem.java
-cat <<EOF > "$PACKAGE_PATH/item/CivilNVGItem.java"
-package com.example.mod.item;
+# 3. Rename and move Item Class to match NVGArmorItem
+# Check both possible previous locations
+if [ -f "src/main/java/com/example/mod/item/CivilNVGItem.java" ]; then
+    mv src/main/java/com/example/mod/item/CivilNVGItem.java "$REAL_PATH/armor/NVGArmorItem.java"
+elif [ -f "$REAL_PATH/item/CivilNVGItem.java" ]; then
+    mv "$REAL_PATH/item/CivilNVGItem.java" "$REAL_PATH/armor/NVGArmorItem.java"
+fi
 
-import com.example.mod.client.renderer.CivilNVGRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemStack;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.RenderProvider;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+# 4. Update NVGArmorItem.java content
+if [ -f "$REAL_PATH/armor/NVGArmorItem.java" ]; then
+    sed -i 's/package .*;/package fryantit.militaryinsurgency.armor;/g' "$REAL_PATH/armor/NVGArmorItem.java"
+    sed -i 's/public class CivilNVGItem/public class NVGArmorItem/g' "$REAL_PATH/armor/NVGArmorItem.java"
+    # Fix renderer import path
+    sed -i 's/import .*CivilNVGRenderer;/import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;/g' "$REAL_PATH/armor/NVGArmorItem.java"
+fi
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+# 5. Update CivilNVGModel.java content
+if [ -f "$REAL_PATH/client/model/CivilNVGModel.java" ]; then
+    sed -i 's/package .*;/package fryantit.militaryinsurgency.client.model;/g' "$REAL_PATH/client/model/CivilNVGModel.java"
+    sed -i 's/import .*CivilNVGItem;/import fryantit.militaryinsurgency.armor.NVGArmorItem;/g' "$REAL_PATH/client/model/CivilNVGModel.java"
+    sed -i 's/CivilNVGItem/NVGArmorItem/g' "$REAL_PATH/client/model/CivilNVGModel.java"
+fi
 
-public class CivilNVGItem extends ArmorItem implements GeoItem {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+# 6. Update CivilNVGRenderer.java content (Fixing 1.20.1 GeckoLib path)
+if [ -f "$REAL_PATH/client/renderer/CivilNVGRenderer.java" ]; then
+    sed -i 's/package .*;/package fryantit.militaryinsurgency.client.renderer;/g' "$REAL_PATH/client/renderer/CivilNVGRenderer.java"
+    sed -i 's/import .*CivilNVGItem;/import fryantit.militaryinsurgency.armor.NVGArmorItem;/g' "$REAL_PATH/client/renderer/CivilNVGRenderer.java"
+    sed -i 's/import .*CivilNVGModel;/import fryantit.militaryinsurgency.client.model.CivilNVGModel;/g' "$REAL_PATH/client/renderer/CivilNVGRenderer.java"
+    sed -i 's/CivilNVGItem/NVGArmorItem/g' "$REAL_PATH/client/renderer/CivilNVGRenderer.java"
+    # Ensure it uses standard GeckoLib 4 path
+    sed -i 's/renderer.layer.GeoArmorRenderer/renderer.GeoArmorRenderer/g' "$REAL_PATH/client/renderer/CivilNVGRenderer.java"
+fi
 
-    public CivilNVGItem(ArmorMaterial material, Type type, Settings settings) {
-        super(material, type, settings);
-    }
+# 7. Final Fix for MilitaryInsurgencyClient.java
+# Clean up any failed previous registration attempts to avoid duplicates
+sed -i '/GeoArmorRenderer.registerArmorRenderer/d' "$CLIENT_FILE"
+sed -i '/import software.bernie.geckolib.renderer.GeoArmorRenderer;/d' "$CLIENT_FILE"
+sed -i '/import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;/d' "$CLIENT_FILE"
 
-    @Override
-    public void createRenderer(Consumer<Object> consumer) {
-        consumer.accept(new RenderProvider() {
-            private CivilNVGRenderer renderer;
+# Re-insert clean imports and registration
+sed -i '15i import software.bernie.geckolib.renderer.GeoArmorRenderer;' "$CLIENT_FILE"
+sed -i '16i import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;' "$CLIENT_FILE"
 
-            @Override
-            public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
-                if (this.renderer == null)
-                    this.renderer = new CivilNVGRenderer();
+# Based on your logs, I'll use ModItems.CIVIL_NVG as the reference
+sed -i '/CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();/a \ \ \ \ \ \ \ \ GeoArmorRenderer.registerArmorRenderer(new CivilNVGRenderer(), fryantit.militaryinsurgency.item.ModItems.CIVIL_NVG);' "$CLIENT_FILE"
 
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                return this.renderer;
-            }
-        });
-    }
-
-    @Override
-    public Supplier<Object> getRenderProvider() {
-        return this.renderProvider;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
-    }
-}
-EOF
-
-# 3. Create CivilNVGModel.java
-cat <<EOF > "$PACKAGE_PATH/client/model/CivilNVGModel.java"
-package com.example.mod.client.model;
-
-import com.example.mod.item.CivilNVGItem;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
-
-public class CivilNVGModel extends GeoModel<CivilNVGItem> {
-    @Override
-    public Identifier getModelResource(CivilNVGItem animatable) {
-        // Model JSON is in mod namespace
-        return new Identifier("militaryinsurgency", "geo/civil_nvg.geo.json");
-    }
-
-    @Override
-    public Identifier getTextureResource(CivilNVGItem animatable) {
-        // Armor texture is in minecraft namespace as requested
-        return new Identifier("minecraft", "textures/models/armor/civil_nvg.png");
-    }
-
-    @Override
-    public Identifier getAnimationResource(CivilNVGItem animatable) {
-        return new Identifier("militaryinsurgency", "animations/civil_nvg.animation.json");
-    }
-}
-EOF
-
-# 4. Create CivilNVGRenderer.java
-cat <<EOF > "$PACKAGE_PATH/client/renderer/CivilNVGRenderer.java"
-package com.example.mod.client.renderer;
-
-import com.example.mod.client.model.CivilNVGModel;
-import com.example.mod.item.CivilNVGItem;
-import software.bernie.geckolib.renderer.layer.GeoArmorRenderer;
-
-public class CivilNVGRenderer extends GeoArmorRenderer<CivilNVGItem> {
-    public CivilNVGRenderer() {
-        super(new CivilNVGModel());
-    }
-}
-EOF
-
-# 5. Clean up old renderers (Edit names if necessary)
-# rm -f "$PACKAGE_PATH/client/renderer/OldNVGRenderer.java"
-
-echo "Setup complete. Folders and files created. Please run ./gradlew build"
+echo "------------------------------------------------"
+echo "Done! All files renamed to match NVGArmorItem."
+echo "Package structure: fryantit.militaryinsurgency"
+echo "Client registration: Linked to ModItems.CIVIL_NVG"
 
