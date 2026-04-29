@@ -1,17 +1,15 @@
 #!/bin/bash
 
 # 1. Define paths
-# Setting up variables for the files that need fixing
 REAL_PATH="src/main/java/fryantit/militaryinsurgency"
-CLIENT_FILE="$REAL_PATH/client/MilitaryInsurgencyClient.java"
 ARMOR_FILE="$REAL_PATH/armor/NVGArmorItem.java"
+CLIENT_FILE="$REAL_PATH/client/MilitaryInsurgencyClient.java"
 
-# 2. Rewrite NVGArmorItem.java to include the missing createRenderer method
-# This follows the mandatory GeckoLib 4.x structure for Fabric
+# 2. Rewrite NVGArmorItem.java with "Safe-Loading" logic
+# This version ensures that no render code is called during initialization
 cat <<EOF > "$ARMOR_FILE"
 package fryantit.militaryinsurgency.armor;
 
-import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -29,19 +27,17 @@ public class NVGArmorItem extends ArmorItem implements GeoItem {
         super(material, type, settings);
     }
 
-    // Mandatory method for GeoItem to link the renderer
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
-            private CivilNVGRenderer renderer;
+            private Object renderer;
 
             @Override
             public net.minecraft.client.render.entity.model.BipedEntityModel<net.minecraft.entity.LivingEntity> getHumanoidArmorModel(net.minecraft.entity.LivingEntity livingEntity, net.minecraft.item.ItemStack itemStack, net.minecraft.entity.EquipmentSlot equipmentSlot, net.minecraft.client.render.entity.model.BipedEntityModel<net.minecraft.entity.LivingEntity> original) {
                 if (this.renderer == null) {
-                    this.renderer = new CivilNVGRenderer();
+                    this.renderer = new fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer();
                 }
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                return this.renderer;
+                return (fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer)this.renderer;
             }
         });
     }
@@ -61,8 +57,7 @@ public class NVGArmorItem extends ArmorItem implements GeoItem {
 }
 EOF
 
-# 3. Rewrite MilitaryInsurgencyClient.java
-# Removing the global registration since the Item now handles its own renderer
+# 3. Final cleanup for Client file
 cat <<EOF > "$CLIENT_FILE"
 package fryantit.militaryinsurgency.client;
 
@@ -71,7 +66,10 @@ import net.fabricmc.api.ClientModInitializer;
 public class MilitaryInsurgencyClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        // In GeckoLib 4 Fabric, the item handles its own render provider via createRenderer
+        // Safe zone: Item handles itself to prevent early NullPointer access
     }
 }
 EOF
+
+echo "------------------------------------------------"
+

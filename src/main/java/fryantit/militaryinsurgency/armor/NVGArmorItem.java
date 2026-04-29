@@ -1,6 +1,5 @@
 package fryantit.militaryinsurgency.armor;
 
-import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -18,19 +17,17 @@ public class NVGArmorItem extends ArmorItem implements GeoItem {
         super(material, type, settings);
     }
 
-    // Mandatory method for GeoItem to link the renderer
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
-            private CivilNVGRenderer renderer;
+            private Object renderer;
 
             @Override
             public net.minecraft.client.render.entity.model.BipedEntityModel<net.minecraft.entity.LivingEntity> getHumanoidArmorModel(net.minecraft.entity.LivingEntity livingEntity, net.minecraft.item.ItemStack itemStack, net.minecraft.entity.EquipmentSlot equipmentSlot, net.minecraft.client.render.entity.model.BipedEntityModel<net.minecraft.entity.LivingEntity> original) {
                 if (this.renderer == null) {
-                    this.renderer = new CivilNVGRenderer();
+                    this.renderer = new fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer();
                 }
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                return this.renderer;
+                return (fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer)this.renderer;
             }
         });
     }
