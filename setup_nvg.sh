@@ -1,29 +1,22 @@
 #!/bin/bash
 
-# 1. Define the path
-# Identifying the source file that has duplicate methods
+# 1. Define paths for the mod files
+# Defining the path to our Java source code
 REAL_PATH="src/main/java/fryantit/militaryinsurgency"
+CLIENT_FILE="$REAL_PATH/client/MilitaryInsurgencyClient.java"
 ARMOR_FILE="$REAL_PATH/armor/NVGArmorItem.java"
 
-# 2. Complete File Rewrite
-# Instead of using 'sed' which caused duplicates, we rewrite the file with clean code
+# 2. Re-write NVGArmorItem to be a standard GeoItem
+# We remove the complex inline renderer and keep it clean for the registry
 cat <<EOF > "$ARMOR_FILE"
 package fryantit.militaryinsurgency.armor;
 
-import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemStack;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 
 public class NVGArmorItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -33,29 +26,8 @@ public class NVGArmorItem extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public void createRenderer(Consumer<Object> consumer) {
-        consumer.accept(new RenderProvider() {
-            private CivilNVGRenderer renderer;
-
-            @Override
-            public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
-                if (this.renderer == null) {
-                    this.renderer = new CivilNVGRenderer();
-                }
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                return this.renderer;
-            }
-        });
-    }
-
-    @Override
-    public Supplier<Object> getRenderProvider() {
-        return GeoItem.makeRenderer(this);
-    }
-
-    @Override
-    public void registerControllers(software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar controllers) {
-        // No animations needed for static NVG goggles
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        // No animations for the static NVG model
     }
 
     @Override
@@ -65,8 +37,22 @@ public class NVGArmorItem extends ArmorItem implements GeoItem {
 }
 EOF
 
-echo "------------------------------------------------"
-echo "✅ File NVGArmorItem.java has been fully rewritten to avoid duplicates."
-echo "✅ All method conflicts resolved."
-echo "🚀 Run: ./gradlew clean build"
+# 3. Use Fabric Rendering API in the Client Initializer
+# This bypasses the GeckoLib internal registry which often causes NPE on Pojav
+cat <<EOF > "$CLIENT_FILE"
+package fryantit.militaryinsurgency.client;
 
+import fryantit.militaryinsurgency.client.renderer.CivilNVGRenderer;
+import fryantit.militaryinsurgency.item.ModItems;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
+
+public class MilitaryInsurgencyClient implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+        // Registering the 3D renderer using Fabric's official API
+        // This ensures the renderer is loaded before the game tries to draw the item
+        ArmorRenderer.register(new CivilNVGRenderer(), ModItems.NVG_ITEM);
+    }
+}
+EOF
