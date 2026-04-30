@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 
 public class ModItems {
     // Registry for the NVG Item
-    public static final Item NVG_ITEM = new NVGArmorItem(ArmorMaterials.NETHERITE, NVGArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+    public static final Item NVG_ITEM = new NVGItem(ArmorMaterials.NETHERITE, NVGItem.Type.HELMET, new Item.Settings().maxCount(1));
 
     public static void registerModItems() {
         Registry.register(Registries.ITEM, new Identifier("militaryinsurgency", "civil_nvg"), NVG_ITEM);

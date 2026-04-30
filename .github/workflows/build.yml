@@ -18,8 +18,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build --refresh-dependencies --no-build-cache
-        
+        run: ./gradlew clean build runClient --args="--username SandboxPlayer"        
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
