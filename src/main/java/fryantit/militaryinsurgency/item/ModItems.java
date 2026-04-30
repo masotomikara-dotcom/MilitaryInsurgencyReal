@@ -1,6 +1,6 @@
 package fryantit.militaryinsurgency.item;
 
-import fryantit.militaryinsurgency.MilitaryInsurgency;
+import fryantit.militaryinsurgency.MilitaryInsurgencyMod;
 import fryantit.militaryinsurgency.item.custom.NVGItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -11,10 +11,10 @@ public class ModItems {
     public static final Item NVG_ITEM = registerItem("nvg_item", new NVGItem(new Item.Settings().maxCount(1)));
 
     private static Item registerItem(String name, Item item) {
-        return Registry.register(Registries.ITEM, new Identifier(MilitaryInsurgency.MOD_ID, name), item);
+        return Registry.register(Registries.ITEM, new Identifier(MilitaryInsurgencyMod.MOD_ID, name), item);
     }
 
     public static void registerModItems() {
-        MilitaryInsurgency.LOGGER.info("Registering Mod Items for " + MilitaryInsurgency.MOD_ID);
+        MilitaryInsurgencyMod.LOGGER.info("Registering Mod Items for " + MilitaryInsurgencyMod.MOD_ID);
     }
 }
