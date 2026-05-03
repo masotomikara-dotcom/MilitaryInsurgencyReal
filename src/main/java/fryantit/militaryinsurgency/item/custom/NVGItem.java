@@ -22,28 +22,27 @@ public class NVGItem extends Item implements GeoItem {
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
-            private CivilNVGItemRenderer renderer;
+            private CivilItemRenderer renderer;
+            private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+            public NVGItem(Properties properties) {
+               super(properties);
+            }
 
             @Override
-            public BuiltinModelItemRenderer getCustomRenderer() {
-                if (this.renderer == null) {
-                    this.renderer = new CivilNVGItemRenderer();
+            public void createRenderer(Consumer<Object>consumer) {
+               consumer.accpect(newRenderProvider() {
+                  @Override
+                  public BuiltinModelItemRenderer getCustomRenderer() {
+                if (renderer == null) {
+                    renderer = new CivilNVGItemRenderer();
                 }
-                return this.renderer;
+                return renderer;
             }
         });
     }
 
     @Override
-    public Supplier<Object> getRenderProvider() {
-        return this.renderProvider;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
-
-    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
+        return cache;
     }
 }
