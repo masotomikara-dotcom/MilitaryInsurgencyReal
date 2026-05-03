@@ -1,5 +1,6 @@
 package fryantit.militaryinsurgency;
 
+import fryantit.militaryinsurgency.item.MilitaryItems;
 import fryantit.militaryinsurgency.item.ModItems;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
