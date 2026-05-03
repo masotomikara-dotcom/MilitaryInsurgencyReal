@@ -14,3 +14,4 @@ public class MilitaryInsurgencyMod implements ModInitializer {
         MilitaryItems.registerModItems();
         ModItems.registerModItems();
     }
+}
