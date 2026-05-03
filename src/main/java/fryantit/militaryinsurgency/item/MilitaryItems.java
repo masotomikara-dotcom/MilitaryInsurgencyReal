@@ -18,6 +18,7 @@ public class MilitaryItems {
     public static final Item MOLTEN_COAL_COKE = registerItem("molten_coal_coke", new Item(new FabricItemSettings()));
     public static final Item IRON_COAL_MIX = registerItem("iron_coal_mix", new Item(new FabricItemSettings()));
     public static final Item GOLD_PLATED_STEEL = registerItem("gold_plated_steel", new Item(new FabricItemSettings()));
+    public static final Item CIVIL_NVG = registerItem("civil_nvg", new Item(new FabricItemSettings()));
     public static final Item TACTICAL_UPGRADE_TEMPLATE = registerItem("tactical_upgrade_template", 
     new Item(new FabricItemSettings().rarity(Rarity.EPIC)));
 
