@@ -14,7 +14,7 @@ public class MilitaryItems {
     public static final Item TITANIUM_INGOT = registerItem("titanium_ingot", new Item(new FabricItemSettings()));
     public static final Item CARBON_FIBER_SHEET = registerItem("carbon_fiber_sheet", new Item(new FabricItemSettings()));
     public static final Item COAL_COKE = registerItem("coal_coke", new Item(new FabricItemSettings()));
-public static final Item COAL_COKE_DUST = registerItem("coal_coke_dust", new Item(new FabricItemSettings()));
+    public static final Item COAL_COKE_DUST = registerItem("coal_coke_dust", new Item(new FabricItemSettings()));
     public static final Item MOLTEN_COAL_COKE = registerItem("molten_coal_coke", new Item(new FabricItemSettings()));
     public static final Item IRON_COAL_MIX = registerItem("iron_coal_mix", new Item(new FabricItemSettings()));
     public static final Item GOLD_PLATED_STEEL = registerItem("gold_plated_steel", new Item(new FabricItemSettings()));

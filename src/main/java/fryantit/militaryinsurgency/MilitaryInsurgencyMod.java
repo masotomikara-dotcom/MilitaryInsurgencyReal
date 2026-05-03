@@ -11,6 +11,6 @@ public class MilitaryInsurgencyMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        MilitaryItems.registerModItems();
         ModItems.registerModItems();
     }
-}
