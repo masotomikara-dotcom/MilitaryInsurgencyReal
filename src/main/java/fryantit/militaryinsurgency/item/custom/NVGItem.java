@@ -14,8 +14,8 @@ public class NVGItem extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private CivilNVGItemRenderer renderer;
 
-    public NVGItem(Properties properties) {
-        super(properties);
+    public NVGItem(Settings settings) {
+        super(settings);
     }
 
     @Override
