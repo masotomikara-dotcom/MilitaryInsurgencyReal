@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TitleScreen.class)
 public class MilitaryInsurgencyMixin {
-    @Inject(at = @At("TAIL", method = "init");
+    @Inject(at = @At("TAIL"), method = "init")
     private void onInit(CallbackInfo info) {
         // Log to confirm mod is working
         MilitaryInsurgencyMod.LOGGER.info("Military Insurgency: Menu loaded successfully!");
