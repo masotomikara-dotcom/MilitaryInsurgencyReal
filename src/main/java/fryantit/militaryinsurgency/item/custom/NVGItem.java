@@ -1,38 +1,28 @@
 package fryantit.militaryinsurgency.item.custom;
 
+import fryantit.militaryinsurgency.client.renderer.CivilNVGItemRenderer;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.item.Item;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+
 import java.util.function.Consumer;
-import java.util.function.Supplier;
-import fryantit.militaryinsurgency.client.renderer.CivilNVGItemRenderer;
 
 public class NVGItem extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+    private CivilNVGItemRenderer renderer;
 
-    public NVGItem(Settings settings) {
-        super(settings);
+    public NVGItem(Properties properties) {
+        super(properties);
     }
 
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
-            private CivilItemRenderer renderer;
-            private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-            public NVGItem(Properties properties) {
-               super(properties);
-            }
-
             @Override
-            public void createRenderer(Consumer<Object>consumer) {
-               consumer.accpect(newRenderProvider() {
-                  @Override
-                  public BuiltinModelItemRenderer getCustomRenderer() {
+            public BuiltinModelItemRenderer getCustomRenderer() {
                 if (renderer == null) {
                     renderer = new CivilNVGItemRenderer();
                 }
