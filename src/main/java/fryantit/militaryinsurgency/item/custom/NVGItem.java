@@ -9,10 +9,11 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class NVGItem extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private CivilNVGItemRenderer renderer;
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     public NVGItem(Settings settings) {
         super(settings);
@@ -21,18 +22,25 @@ public class NVGItem extends Item implements GeoItem {
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
+            private CivilNVGItemRenderer renderer;
+
             @Override
             public BuiltinModelItemRenderer getCustomRenderer() {
-                if (renderer == null) {
-                    renderer = new CivilNVGItemRenderer();
+                if (this.renderer == null) {
+                    this.renderer = new CivilNVGItemRenderer();
                 }
-                return renderer;
+                return this.renderer;
             }
         });
     }
 
     @Override
+    public Supplier<Object> getRenderProvider() {
+        return this.renderProvider;
+    }
+
+    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
+        return this.cache;
     }
 }
