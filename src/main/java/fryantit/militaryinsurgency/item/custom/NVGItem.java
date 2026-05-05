@@ -37,7 +37,6 @@ public class NVGItem extends Item implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        // Để trống nếu kính không có hoạt ảnh chuyển động
     }
 
     @Override
