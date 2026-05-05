@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -32,6 +33,11 @@ public class NVGItem extends Item implements GeoItem {
                 return this.renderer;
             }
         });
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        // Để trống nếu kính không có hoạt ảnh chuyển động
     }
 
     @Override
